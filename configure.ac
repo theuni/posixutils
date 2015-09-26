@@ -72,7 +72,6 @@ AC_CONFIG_FILES([Makefile
 		env/Makefile
 		expr/Makefile
 		false/Makefile
-		getconf/Makefile
 		grep/Makefile
 		head/Makefile
 		id/Makefile
