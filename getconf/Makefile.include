@@ -1,27 +1,26 @@
 
 LIBPU = libpu/libpu.a @ARGP_LIB@
 
-bin_PROGRAMS += getconf/getconf
+getconf_string_data = getconf/getconf-path.data getconf/getconf-system.data getconf/getconf-confstr.data
 
+bin_PROGRAMS += getconf/getconf
 dist_man_MANS += getconf/getconf.1
 
-getconf_getconf_SOURCES = getconf/getconf.cc getconf/getconf-path.h getconf/getconf-system.h getconf/getconf-confstr.h
+getconf_getconf_SOURCES = getconf/getconf.cc
 getconf_getconf_LDADD = $(LIBPU)
 getconf_getconf_CPPFLAGS = -I$(top_srcdir)/include
+getconf_getconf_INCLUDES = $(getconf_string_data:.data=.h)
+
+getconf/getconf-path.h: getconf/getconf-path.data
+	$(PERL) gen-strmap.pl $^ >$@
+getconf/getconf-system.h: getconf/getconf-system.data
+	$(PERL) gen-strmap.pl $^ >$@
+getconf/getconf-confstr.h: getconf/getconf-confstr.data
+	$(PERL) gen-strmap.pl $^ >$@
+
+$(getconf_getconf_SOURCES): $(getconf_getconf_INCLUDES)
 
 TESTS += getconf/getconf-test
 
-EXTRA_DIST += getconf/getconf-test \
-	getconf/getconf-path.data getconf/getconf-system.data getconf/getconf-confstr.data
-
-CLEANFILES += getconf/getconf-path.h getconf/getconf-system.h getconf/getconf-confstr.h
-
-getconf/getconf.cc: getconf/getconf-path.h getconf/getconf-system.h getconf/getconf-confstr.h
-
-getconf/getconf-path.h: $(srcdir)/getconf/getconf-path.data
-	$(PERL) $(top_srcdir)/gen-strmap.pl $< >$@
-getconf/getconf-system.h: $(srcdir)/getconf/getconf-system.data
-	$(PERL) $(top_srcdir)/gen-strmap.pl $< >$@
-getconf/getconf-confstr.h: $(srcdir)/getconf/getconf-confstr.data
-	$(PERL) $(top_srcdir)/gen-strmap.pl $< >$@
-
+CLEANFILES += $(getconf_getconf_INCLUDES)
+EXTRA_DIST += getconf/getconf-test
