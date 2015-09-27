@@ -1,6 +1,10 @@
 #!/bin/sh
 
 EXPECTED=`tty`
+if [ $? -ne 0 ]
+then
+        exit 77
+fi
 OUT=`tty/tty`
 if [ $? -ne 0 ]
 then

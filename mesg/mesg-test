@@ -1,6 +1,10 @@
 #!/bin/sh
 
 EXPECTED=`mesg`
+if [ $? -ne 0 ]
+then
+        exit 77
+fi
 OUT=`mesg/mesg`
 if [ $? -ne 0 ]
 then

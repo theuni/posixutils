@@ -1,6 +1,10 @@
 #!/bin/sh
 
 EXPECTED=`logname`
+if [ $? -ne 0 ]
+then
+        exit 77
+fi
 OUT=`logname/logname`
 if [ $? -ne 0 ]
 then
